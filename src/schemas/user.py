@@ -1,4 +1,5 @@
 from typing import Optional
+
 from pydantic import BaseModel
 
 from src.schemas.base import Base
@@ -11,11 +12,9 @@ class UserBase(BaseModel):
 
 
 class User(Base, UserBase):
-
     class Config:
         orm_mode = True
 
 
 class UserCreate(UserBase):
     pass
-

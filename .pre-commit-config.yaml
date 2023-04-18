@@ -1,0 +1,30 @@
+repos:
+-   repo: https://github.com/ambv/black
+    rev: 23.3.0
+    hooks:
+    - id: black
+      args:
+          - --line-length=80
+          - --exclude="""\.git |
+                \.__pycache__|
+                \.hg|
+                \.mypy_cache|
+                \.tox|
+                \.venv|
+                _build|
+                buck-out|
+                build|
+                dist"""
+-   repo: https://github.com/pycqa/isort
+    rev: 5.12.0
+    hooks:
+      - id: isort
+        args:
+          - --line-length=80
+-   repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v0.902
+    hooks:
+      - id: mypy
+        exclude: ^tests/
+        require_serial: true
+        verbose: true

@@ -1,4 +1,5 @@
 from sqlalchemy.orm import Session
+
 from src.models.models import City
 from src.schemas.city import CityCreate
 
