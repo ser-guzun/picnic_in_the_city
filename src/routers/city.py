@@ -7,22 +7,22 @@ from src.services import city_service
 router = APIRouter(dependencies=[Depends(get_db)])
 
 
-@router.get("/cities/", response_model=list[City])
+@router.get("/cities/", response_model=list[City], tags=["city"])
 def read_cities(db: Session = Depends(get_db)) -> list[City]:
     return city_service.get_cities(db=db)
 
 
-@router.get("/cities/{city_id}", response_model=City)
+@router.get("/cities/{city_id}", response_model=City, tags=["city"])
 def read_city_by_id(city_id: int, db: Session = Depends(get_db)) -> City:
     return city_service.get_city_by_id(city_id=city_id, db=db)
 
 
-@router.get("/cities&q={city_name}", response_model=City)
+@router.get("/cities&q=name:{city_name}", response_model=City, tags=["city"])
 def read_city_by_name(city_name: str, db: Session = Depends(get_db)) -> City:
     return city_service.get_city_by_name(city_name=city_name, db=db)
 
 
-@router.post("/cities/", response_model=City)
+@router.post("/cities/", response_model=City, tags=["city"])
 def create_city(city: CityCreate, db: Session = Depends(get_db)) -> City:
     db_city = city_service.get_city_by_name(city_name=city.name, db=db)
     if db_city:

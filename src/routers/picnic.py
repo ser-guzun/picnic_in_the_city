@@ -7,23 +7,31 @@ from src.services import picnic_service
 router = APIRouter(dependencies=[Depends(get_db)])
 
 
-@router.get("/picnics/", response_model=list[Picnic])
+@router.get("/picnics/", response_model=list[Picnic], tags=["picnic"])
 def read_picnics(db: Session = Depends(get_db)) -> list[Picnic]:
     return picnic_service.get_picnics(db=db)
 
 
-@router.get("/picnics/{picnic_id}", response_model=Picnic)
+@router.get("/picnics/{picnic_id}", response_model=Picnic, tags=["picnic"])
 def read_picnic_by_id(picnic_id: int, db: Session = Depends(get_db)) -> Picnic:
     return picnic_service.get_picnic_by_id(picnic_id=picnic_id, db=db)
 
 
-@router.get("/picnics&q={picnic_reason}", response_model=list[Picnic])
-def read_city_by_name(
+@router.get(
+    "/picnics&q=reason:{picnic_reason}",
+    response_model=list[Picnic],
+    tags=["picnic"],
+)
+def read_picnic_by_reason(
     picnic_reason: str, db: Session = Depends(get_db)
 ) -> list[Picnic]:
-    return picnic_service.get_picnics_by_reason(picnic_reason=picnic_reason, db=db)
+    return picnic_service.get_picnics_by_reason(
+        picnic_reason=picnic_reason, db=db
+    )
 
 
-@router.post("/picnics/", response_model=Picnic)
-def create_city(picnic: PicnicCreate, db: Session = Depends(get_db)) -> Picnic:
+@router.post("/picnics/", response_model=Picnic, tags=["picnic"])
+def create_picnic(
+    picnic: PicnicCreate, db: Session = Depends(get_db)
+) -> Picnic:
     return picnic_service.create_picnic(picnic=picnic, db=db)

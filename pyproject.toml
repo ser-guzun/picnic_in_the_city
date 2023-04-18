@@ -1,0 +1,48 @@
+[tool.poetry]
+name = "picnic_in_the_city"
+version = "0.1.0"
+description = "Test for some employer"
+authors = ["Sergey Guzun <ser.guzun19@gmail.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+fastapi = "0.95.1"
+pydantic = "1.10.7"
+SQLAlchemy = "2.0.9"
+starlette = "0.26.1"
+uvicorn = "0.21.1"
+alembic = "1.10.3"
+python-dotenv = "1.0.0"
+psycopg2-binary = "^2.9.4"
+
+[tool.poetry.group.dev.dependencies]
+pre-commit = "^3.2.1"
+pytest = "^7.2.2"
+black = "^23.3.0"
+isort = "^5.12.0"
+mypy = "^1.1.1"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.pytest.ini_options]
+minversion = "6.0"
+addopts = "-ra -q"
+testpaths = [
+    "tests",
+]
+
+[tool.black]
+line_length = 80
+
+[tool.isort]
+line_length = 80
+profile = "black"
+known_first_party = ["api", "infrastructure", "domain"]
+
+[tool.mypy]
+python_version = "3.10"
+disallow_untyped_defs = true
+ignore_missing_imports = true
+exclude = [".venv", "tests/"]
