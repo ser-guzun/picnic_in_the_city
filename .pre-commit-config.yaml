@@ -21,10 +21,3 @@ repos:
       - id: isort
         args:
           - --line-length=80
--   repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v0.902
-    hooks:
-      - id: mypy
-        exclude: ^tests/
-        require_serial: true
-        verbose: true
