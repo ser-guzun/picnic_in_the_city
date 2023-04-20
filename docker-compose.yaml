@@ -1,6 +1,26 @@
 version: "3"
 
 services:
+  app:
+    build: ./
+    container_name: app
+    depends_on:
+      - db
+    volumes:
+      - .:/app
+    working_dir: /app
+    env_file:
+      - src/.env
+    healthcheck:
+      test: timeout 5 bash -c 'cat < /dev/null > /dev/tcp/localhost/8000'
+      interval: 5s
+      timeout: 5s
+      retries: 12
+    ports:
+      - "8000:8000"
+    networks:
+      - default
+
   db:
     restart: always
     image: postgres:13-alpine
@@ -14,5 +34,12 @@ services:
       interval: 5s
       timeout: 5s
       retries: 12
+    volumes:
+      - ./data:/var/lib/postgresql/data
     ports:
-      - "5433:5432"
+      - "5432:5432"
+    networks:
+      - default
+
+networks:
+  default:
