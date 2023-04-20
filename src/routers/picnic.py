@@ -1,15 +1,15 @@
 from fastapi import APIRouter, Depends
 
-from src.dependencies.database import Session, get_db
+from src.dependencies.database import async_session, get_session
 from src.schemas.picnic import Picnic, PicnicCreate
 from src.schemas.user import User
 from src.services import picnic_service, picnic_user_service, user_service
 
-router = APIRouter(dependencies=[Depends(get_db)])
+router = APIRouter(dependencies=[Depends(get_session)])
 
 
 @router.get("/picnics/", response_model=list[Picnic], tags=["picnic"])
-def read_picnics(db: Session = Depends(get_db)) -> list[Picnic]:
+def read_picnics(db: async_session = Depends(get_session)) -> list[Picnic]:
     picnics = picnic_service.get_picnics(db=db)
     for picnic in picnics:
         picnic_users = picnic_user_service.get_users_by_picnic_id(
@@ -17,7 +17,9 @@ def read_picnics(db: Session = Depends(get_db)) -> list[Picnic]:
         )
         if picnic_users:
             users = [
-                user_service.get_user_by_id(user_id=picnic_user.user_id, db=db)
+                user_service.get_user_by_id(
+                    user_id=picnic_user.user_id, session=db
+                )
                 for picnic_user in picnic_users
             ]
             picnic.users = users
@@ -25,7 +27,9 @@ def read_picnics(db: Session = Depends(get_db)) -> list[Picnic]:
 
 
 @router.get("/picnics/{picnic_id}", response_model=Picnic, tags=["picnic"])
-def read_picnic_by_id(picnic_id: int, db: Session = Depends(get_db)) -> Picnic:
+def read_picnic_by_id(
+    picnic_id: int, db: async_session = Depends(get_session)
+) -> Picnic:
     return picnic_service.get_picnic_by_id(picnic_id=picnic_id, db=db)
 
 
@@ -35,7 +39,7 @@ def read_picnic_by_id(picnic_id: int, db: Session = Depends(get_db)) -> Picnic:
     tags=["picnic"],
 )
 def read_picnic_by_reason(
-    picnic_reason: str, db: Session = Depends(get_db)
+    picnic_reason: str, db: async_session = Depends(get_session)
 ) -> list[Picnic]:
     return picnic_service.get_picnics_by_reason(
         picnic_reason=picnic_reason, db=db
@@ -44,13 +48,13 @@ def read_picnic_by_reason(
 
 @router.post("/picnics/", response_model=Picnic, tags=["picnic"])
 def create_picnic(
-    picnic: PicnicCreate, db: Session = Depends(get_db)
+    picnic: PicnicCreate, db: async_session = Depends(get_session)
 ) -> Picnic:
     db_picnic: Picnic = picnic_service.create_picnic(picnic=picnic, db=db)
 
     if picnic.users:
         users = [
-            user_service.get_user_by_id(user_id=user.id, db=db)
+            user_service.get_user_by_id(user_id=user.id, session=db)
             for user in picnic.users
         ]
         for user in users:
@@ -64,10 +68,12 @@ def create_picnic(
 
 @router.put("/picnic_user/", response_model=list[User], tags=["picnic"])
 def registration_users_to_picnic(
-    picnic_id: int, user_ids: list[int], db: Session = Depends(get_db)
+    picnic_id: int,
+    user_ids: list[int],
+    db: async_session = Depends(get_session),
 ) -> list[User]:
     users = [
-        user_service.get_user_by_id(user_id=user_id, db=db)
+        user_service.get_user_by_id(user_id=user_id, session=db)
         for user_id in user_ids
     ]
     for user in users:
