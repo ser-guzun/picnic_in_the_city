@@ -11,8 +11,8 @@ async def get_users(session: AsyncSession) -> list[User]:
 
 
 async def get_user_by_id(user_id: int, session: AsyncSession) -> User:
-    users = await session.execute(select(User).where(User.id == user_id))
-    return users.scalar()
+    user = await session.execute(select(User).where(User.id == user_id))
+    return user.scalar()
 
 
 async def get_users_by_name(

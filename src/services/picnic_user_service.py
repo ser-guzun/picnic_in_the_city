@@ -1,17 +1,22 @@
-from sqlalchemy.orm import Session
+from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.models.models import PicnicUser
 
 
-def registration_user_to_picnic(
-    picnic_id: int, user_id: int, db: Session
+async def registration_user_to_picnic(
+    picnic_id: int, user_id: int, session: AsyncSession
 ) -> PicnicUser:
     picnic_user = PicnicUser(picnic_id=picnic_id, user_id=user_id)
-    db.add(picnic_user)
-    db.commit()
-    db.refresh(picnic_user)
+    session.add(picnic_user)
+    await session.commit()
     return picnic_user
 
 
-def get_users_by_picnic_id(picnic_id: int, db: Session) -> list[PicnicUser]:
-    return db.query(PicnicUser).filter(PicnicUser.picnic_id == picnic_id).all()
+async def get_users_by_picnic_id(
+    picnic_id: int, session: AsyncSession
+) -> list[PicnicUser]:
+    picnic_users = await session.execute(
+        select(PicnicUser).where(PicnicUser.picnic_id == picnic_id)
+    )
+    return picnic_users.scalars().all()
