@@ -19,8 +19,12 @@ class Picnic(Base):
     user = relationship(
         "User", secondary="picnic_user", back_populates="picnic"
     )
-    created_at = Column(DateTime(), nullable=False, default=func.now())
-    updated_at = Column(DateTime(), nullable=False, default=func.now())
+    created_at = Column(
+        DateTime(timezone=False), nullable=False, default=func.now()
+    )
+    updated_at = Column(
+        DateTime(timezone=False), nullable=False, default=func.now()
+    )
 
     def __repr__(self):
         return f"<Пикник {self.id}>"

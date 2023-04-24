@@ -1,24 +1,27 @@
-from sqlalchemy.orm import Session
+from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.models.models import City
 from src.schemas.city import CityCreate
 
 
-def get_cities(db: Session):
-    return db.query(City).all()
+async def get_cities(session: AsyncSession) -> list[City]:
+    cities = await session.execute(select(City))
+    return cities.scalars().all()
 
 
-def get_city_by_id(city_id: int, db: Session):
-    return db.query(City).filter(City.id == city_id).first()
+async def get_city_by_id(city_id: int, session: AsyncSession) -> City:
+    city = await session.execute(select(City).where(City.id == city_id))
+    return city.scalar()
 
 
-def get_city_by_name(city_name: str, db: Session):
-    return db.query(City).filter(City.name == city_name).first()
+async def get_city_by_name(city_name: str, session: AsyncSession) -> City:
+    city = await session.execute(select(City).where(City.name == city_name))
+    return city.scalar()
 
 
-def create_city(city: CityCreate, db: Session):
+async def create_city(city: CityCreate, session: AsyncSession):
     city = City(name=city.name)
-    db.add(city)
-    db.commit()
-    db.refresh(city)
+    session.add(city)
+    await session.commit()
     return city
