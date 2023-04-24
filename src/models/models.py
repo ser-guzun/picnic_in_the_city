@@ -1,3 +1,5 @@
+from datetime import timezone
+
 from sqlalchemy import Column, DateTime, ForeignKey, Integer, String, func
 from sqlalchemy.orm import relationship
 
@@ -15,7 +17,7 @@ class Picnic(Base):
         Integer, ForeignKey("city.id", ondelete="CASCADE"), nullable=False
     )
     city = relationship("City", back_populates="picnics")
-    time = Column(DateTime, nullable=False)
+    time = Column(DateTime(timezone=True), nullable=False)
     user = relationship(
         "User", secondary="picnic_user", back_populates="picnic"
     )
