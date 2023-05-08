@@ -1,2 +1,4 @@
-data/
+data/db
 venv/
+requirements.txt
+.pytest_cache

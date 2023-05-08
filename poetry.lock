@@ -389,17 +389,6 @@ plugins = ["setuptools"]
 requirements-deprecated-finder = ["pip-api", "pipreqs"]
 
 [[package]]
-name = "logging"
-version = "0.4.9.6"
-description = "A logging module for Python"
-category = "main"
-optional = false
-python-versions = "*"
-files = [
-    {file = "logging-0.4.9.6.tar.gz", hash = "sha256:26f6b50773f085042d301085bd1bf5d9f3735704db9f37c1ce6d8b85c38f2417"},
-]
-
-[[package]]
 name = "mako"
 version = "1.2.4"
 description = "A super-fast templating language that borrows the best ideas from the existing templating languages."
@@ -986,4 +975,4 @@ test = ["covdefaults (>=2.2.2)", "coverage (>=7.1)", "coverage-enable-subprocess
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "23485f829ac0a141d7510e0936e39874a735068cc2a952be1620ac6c1df9502d"
+content-hash = "6520a06defc9e6ba221484cb7bb20dd51472005af99084d57c4f3dce0ebd45de"

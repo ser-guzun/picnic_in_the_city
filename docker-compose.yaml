@@ -7,7 +7,7 @@ services:
     depends_on:
       - db
     volumes:
-      - ./data/logs:/app/data/logs
+      - ./data/logs:/data/logs
     working_dir: /app
     env_file:
       - src/.env
